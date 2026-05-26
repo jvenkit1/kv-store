@@ -4,10 +4,6 @@ A replicated, strongly-consistent key-value store built on top of [`paxos-go`](h
 
 Each node runs an identical state machine (`map[string]string`); writes go through Paxos consensus before being applied. Reads are served locally (eventually consistent).
 
-## Status
-
-In development. See [Implementation_Plan.md](./Implementation_Plan.md) for the milestone-by-milestone roadmap.
-
 ## Build & test
 
 ```
