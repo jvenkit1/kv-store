@@ -14,6 +14,8 @@ make build    # build bin/kv
 
 ## Running a 3-node cluster
 
+Each `go run ./cmd/kv` blocks at startup until all peers are reachable — paxos-go's `transport.Start` waits for peer gRPC connections to become `Ready`, eliminating the split-brain election race. You have 30 seconds between launching the first and third node before any will give up.
+
 ```bash
 # Terminal 1
 go run ./cmd/kv -id 1 -paxos 127.0.0.1:9001 -http 127.0.0.1:8001 \
@@ -50,5 +52,3 @@ internal/server/    # HTTP server
 - **Local reads can be stale.** Cross-replica read-your-writes is not guaranteed.
 - **Followers reject writes.** Clients receive 503 with no `Location` header (paxos-go doesn't yet expose leader identity to followers).
 - **No idempotency for client retries.** A retried write may be applied twice (harmless for SET/DELETE; unsafe for future CAS).
-
-See [Implementation_Plan.md](./Implementation_Plan.md) §2 for the rationale and §M6/M7 for the stretch fixes.
